@@ -142,7 +142,7 @@ def main():
     output_path = 'main/output.txt'  # Output file
     ttask, umax, new_users = read_file(input_path)
     output, cost = main_loop(ttask, umax, new_users, base_cost)
-    # write_file(output_path, output, cost)
+    write_file(output_path, output, cost)
 
 
 if __name__ == '__main__':
