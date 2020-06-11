@@ -12,47 +12,46 @@ from main import load_balancer as lb
 
 
 @pytest.mark.parametrize("umax", range(1, 11))
-def test_server_availability_for_new_users(umax):
+def test_should_return_true_when_server_is_available(umax):
     server = lb.Server(umax)
     assert server.available() is True
 
 
-def test_server_add_new_users():
+def test_should_return_true_when_user_is_added():
     server = lb.Server(2)
     ttask = 1
     assert server.add(ttask) is True
-    assert server.users == [ttask]
 
 
-def test_server_not_available_for_new_users():
+def test_should_return_false_when_server_is_not_available():
     server = lb.Server(2)
     server.add(1)
     server.add(1)
     assert server.available() is False
 
 
-def test_should_not_add_user_to_server_reaches_max_users():
+def test_should_return_false_when_try_to_add_user_after_max_users_reached():
     server = lb.Server(2)
     server.add(1)
     server.add(1)
     assert server.add(1) is False
 
 
-def test_check_users_task_lenght_server():
+def test_should_return_ticks_remaining_per_task_when_calling_users():
     server = lb.Server(2)
     server.add(1)
     server.add(10)
     assert server.users == [1, 10]
 
 
-def test_check_higher_lenght_task_server():
+def test_should_return_highest_ticks_remaining_on_server():
     server = lb.Server(2)
     server.add(1)
     server.add(10)
     assert server.max_task() == 10
 
 
-def test_server_clear_method():
+def test_should_remove_users_with_finished_tasks_on_server():
     server = lb.Server(2)
     server.add(0)
     server.add(1)
@@ -60,7 +59,7 @@ def test_server_clear_method():
     assert server.users == [1]
 
 
-def test_server_tick_method_reduce_task_lenght_by_one_in_each_user():
+def test_should_reduce_one_tick_per_user_on_the_server_when_a_tick_passes():
     server = lb.Server(2)
     server.add(2)
     server.add(3)
@@ -68,7 +67,7 @@ def test_server_tick_method_reduce_task_lenght_by_one_in_each_user():
     assert server.users == [1, 2]
 
 
-def test_server_tick_method_reduce_task_lenght_by_one_in_each_user_then_remove_empty_users():
+def test_should_reduce_one_tick_per_user_on_the_server_when_a_tick_passes_then_remove_users_with_finished_tasks():
     server = lb.Server(2)
     server.add(1)
     server.add(1)
@@ -76,7 +75,7 @@ def test_server_tick_method_reduce_task_lenght_by_one_in_each_user_then_remove_e
     assert server.users == []
 
 
-def test_run_tick_multiple_servers():
+def test_should_reduce_one_tick_per_user_on_all_servers_when_a_tick_passes():
     server1 = lb.Server(1)
     server2 = lb.Server(2)
     ttask = 2
@@ -88,7 +87,7 @@ def test_run_tick_multiple_servers():
     assert server2.users == [ttask - 1] * 2
 
 
-def test_check_tasks_lenght_server1_bigger_server2_true():
+def test_should_return_true_when_server1_has_longer_tasks_than_server2():
     server1 = lb.Server(1)
     server2 = lb.Server(2)
     server1.add(5)
@@ -97,7 +96,7 @@ def test_check_tasks_lenght_server1_bigger_server2_true():
     assert lb.check_tasks(server1, server2) is True
 
 
-def test_check_tasks_lenght_server1_bigger_server2_false():
+def test_should_return_false_when_server2_has_longer_tasks_than_server1():
     server1 = lb.Server(1)
     server2 = lb.Server(2)
     server1.add(1)
@@ -106,14 +105,14 @@ def test_check_tasks_lenght_server1_bigger_server2_false():
     assert lb.check_tasks(server1, server2) is False
 
 
-def test_start_new_server_with_umax():
+def test_should_start_one_new_server_on_servers_list():
     servers = []
     umax = 5
     lb.start_new_server(servers, umax)
     assert len(servers) == 1
 
 
-def test_get_best_server_for_new_user_one_available_spot():
+def test_should_return_the_available_server_when_one_is_available_and_one_is_full():
     umax = 2
     server1 = lb.Server(umax)
     server2 = lb.Server(umax)
@@ -123,7 +122,7 @@ def test_get_best_server_for_new_user_one_available_spot():
     assert lb.get_best_server([server1, server2], umax) == server2
 
 
-def test_get_best_server_for_new_user_one_available_spot_per_server_server1_should_be_chosen():
+def test_should_return_the_server_with_longer_tasks_when_both_servers_are_available():
     umax = 2
     server1 = lb.Server(umax)
     server2 = lb.Server(umax)
@@ -132,7 +131,7 @@ def test_get_best_server_for_new_user_one_available_spot_per_server_server1_shou
     assert lb.get_best_server([server1, server2], umax) == server1
 
 
-def test_get_best_server_for_new_user_full_server():
+def test_should_return_new_server_when_both_servers_are_full():
     umax = 2
     server = lb.Server(umax)
     server.add(1)
@@ -140,7 +139,7 @@ def test_get_best_server_for_new_user_full_server():
     assert isinstance(lb.get_best_server([server], umax), lb.Server) is True
 
 
-def test_add_new_user_to_best_server():
+def test_should_add_new_user_to_server_with_longer_tasks_when_both_servers_are_available():
     umax = 2
     ttask = 5
     server1 = lb.Server(umax)
@@ -151,7 +150,7 @@ def test_add_new_user_to_best_server():
     assert server1.users == [3, 5]
 
 
-def test_add_two_new_users_to_best_servers():
+def test_should_add_two_users_one_on_each_server_when_both_servers_are_available():
     umax = 2
     ttask = 5
     server1 = lb.Server(umax)
@@ -162,15 +161,15 @@ def test_add_two_new_users_to_best_servers():
     assert server1.users == [3, 5] and server2.users == [2, 5]
 
 
-def test_main_loop_with_simplest_data():
-    ttask = 2
-    umax = 2
+def test_should_return_total_cost_when_one_user():
+    ttask = 1
+    umax = 1
     users = [1]
     base_cost = 1
-    assert lb.main_loop(ttask, umax, users, base_cost) == ([[1], [1], []], 2)
+    assert lb.main_loop(ttask, umax, users, base_cost) == ([[1], []], 1)
 
 
-def test_main_loop_with_given_example():
+def test_should_return_total_cost_when_more_users():
     ttask = 4
     umax = 2
     users = [1, 3, 0, 1, 0, 1]
@@ -179,7 +178,7 @@ def test_main_loop_with_given_example():
 
 
 @pytest.mark.parametrize("ttask, umax, users, base_cost", [(10, 10, [5, 2, 6, 5, 10], 1)])
-def test_main_loop_with_predefined_numbers(ttask, umax, users, base_cost):
+def test_should_return_total_cost_when_more_users_with_ttask_and_umax_at_max_limit(ttask, umax, users, base_cost):
     result = (
         [
             [5],
@@ -203,7 +202,7 @@ def test_main_loop_with_predefined_numbers(ttask, umax, users, base_cost):
     assert lb.main_loop(ttask, umax, users, base_cost) == result
 
 
-def test_read_input_file_given_example():
+def test_should_return_read_data_from_input_file():
     ttask = 4
     umax = 2
     users = [1, 3, 0, 1, 0, 1]
