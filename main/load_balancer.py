@@ -9,6 +9,7 @@ Created on Wed Jun 10 08:17:56 2020
 
 
 class Server(object):
+    """Server Object defined with max users simultaneously. """
     def __init__(self, umax):
         self.umax = umax  # Max users simultaneously on server
         self.users = []  # Current users on server
@@ -114,6 +115,7 @@ def write_file(path, data, total_cost):
 
 
 def main_loop(ttask, umax, queue, base_cost):
+    """Main loop control will return servers used and total cost."""
     tick = 0
     total_cost = 0
     servers = []
@@ -131,19 +133,19 @@ def main_loop(ttask, umax, queue, base_cost):
         to_remove = [s for s in servers if s.users == []]
         [servers.remove(s) for s in to_remove]
         total_cost += len(servers) * base_cost
-        print('tick', tick, 'servers', [len(s.users) for s in servers], 'total_cost', total_cost)
         output.append([len(s.users) for s in servers])
     return output, total_cost
 
 
-def main():
-    base_cost = 1  # Cost per tick
-    input_path = 'test/input.txt'  # Input file
-    output_path = 'test/output.txt'  # Output file
+def load_balancer(input_path, output_path, base_cost):
+    """Simple load balancer flux control."""
     ttask, umax, new_users = read_file(input_path)
     output, cost = main_loop(ttask, umax, new_users, base_cost)
     write_file(output_path, output, cost)
 
 
 if __name__ == '__main__':
-    main()
+    base_cost = 1  # Cost per tick per server
+    input_path = 'test/input.txt'  # Input file
+    output_path = 'test/output.txt'  # Output file
+    load_balancer(input_path, output_path, base_cost)
