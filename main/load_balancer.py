@@ -7,6 +7,8 @@ Created on Wed Jun 10 08:17:56 2020
 @author: rcbadiale
 """
 
+import sys
+
 
 class Server(object):
     """Server Object defined with max users simultaneously. """
@@ -145,7 +147,17 @@ def load_balancer(input_path, output_path, base_cost):
 
 
 if __name__ == '__main__':
-    base_cost = 1  # Cost per tick per server
-    input_path = 'test/input.txt'  # Input file
-    output_path = 'test/output.txt'  # Output file
+    if '--help' in sys.argv[1:] or '-h' in sys.argv[1:]:
+        print("""Load balancer proposed solution.
+                \n  load_balancer.py [input file] [output file] [base cost per tick per server]
+                \nArguments:
+                \r  --help, -h : Help screen.
+                """)
+        sys.exit(0)
+    elif len(sys.argv[1:]) < 3:
+        print('Missing arguments.\nFor help use --help or -h.')
+        sys.exit(22)
+    input_path = sys.argv[1]
+    output_path = sys.argv[2]
+    base_cost = int(sys.argv[3])
     load_balancer(input_path, output_path, base_cost)
