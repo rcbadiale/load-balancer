@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Test file for 'load_balancer.py' file for Diebold Nixdorf practical test.
+Test file for 'load_balancer.py'.
 
 Created on Wed Jun 10 08:55:37 2020
 

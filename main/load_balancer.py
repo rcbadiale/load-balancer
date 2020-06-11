@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Main load balancer file for Diebold Nixdorf practical test.
+Main load balancer file.
 
 Created on Wed Jun 10 08:17:56 2020
 
