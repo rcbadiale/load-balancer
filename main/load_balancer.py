@@ -89,9 +89,10 @@ def get_best_server(servers, umax):
     return to_add
 
 
-def user_to_server(servers, umax, ttask):
-    """Add one new user to the best server. """
-    get_best_server(servers, umax).add(ttask)
+def users_to_server(servers, add, umax, ttask):
+    """Add each new user to the best server available. """
+    for user in range(add):
+        get_best_server(servers, umax).add(ttask)
 
 
 def write_file(path, data, total_cost):
@@ -124,22 +125,21 @@ def main_loop(ttask, umax, queue, base_cost):
             add = queue.pop(0)
             if add > 0 and len(servers) == 0:  # First run
                 start_new_server(servers, umax)
-                servers[-1].add(ttask)
+                users_to_server(servers, add, umax, ttask)
             elif add > 0:
-                for user in range(add):
-                    user_to_server(servers, umax, ttask)
+                users_to_server(servers, add, umax, ttask)
         to_remove = [s for s in servers if s.users == []]
         [servers.remove(s) for s in to_remove]
         total_cost += len(servers) * base_cost
-        # print('tick', tick, 'servers', [len(s.users) for s in servers], 'total_cost', total_cost)
+        print('tick', tick, 'servers', [len(s.users) for s in servers], 'total_cost', total_cost)
         output.append([len(s.users) for s in servers])
     return output, total_cost
 
 
 def main():
     base_cost = 1  # Cost per tick
-    input_path = 'main/input.txt'  # Input file
-    output_path = 'main/output.txt'  # Output file
+    input_path = 'test/input.txt'  # Input file
+    output_path = 'test/output.txt'  # Output file
     ttask, umax, new_users = read_file(input_path)
     output, cost = main_loop(ttask, umax, new_users, base_cost)
     write_file(output_path, output, cost)
